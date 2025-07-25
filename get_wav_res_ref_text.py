@@ -10,6 +10,9 @@ lines = f.readlines()
 f.close()
 
 f_w = open(wav_res_ref_text, 'w')
+
+# import ipdb; ipdb.set_trace()
+
 for line in tqdm(lines):
     if len(line.strip().split('|')) == 5:
         utt, prompt_text, prompt_wav, infer_text, infer_wav = line.strip().split('|')
@@ -21,8 +24,10 @@ for line in tqdm(lines):
         utt, infer_text, prompt_wav = line.strip().split('|')
         if utt.endswith(".wav"):
             utt = utt[:-4]
-    if not os.path.exists(os.path.join(wav_dir, utt + '.wav')):
-        continue
+    
+    output_wav = os.path.join(wav_dir, utt)
+    if not os.path.exists(output_wav):
+        raise FileNotFoundError(f"Output wav file does not exist: {output_wav}")
 
     # tmp
     #prompt_wav = infer_wav

@@ -9,14 +9,17 @@ score_file=$output_dir/wav_res_ref_text.wer
 
 workdir=$(cd $(dirname $0); cd ../; pwd)
 
-python3 get_wav_res_ref_text.py $meta_lst $output_dir $wav_wav_text
-python3 prepare_ckpt.py
+python3 get_wav_res_ref_text.py $meta_lst $output_dir $wav_wav_text || exit -1
+# python3 prepare_ckpt.py
 
 timestamp=$(date +%s)
 thread_dir=/tmp/thread_metas_$timestamp/
 mkdir $thread_dir
 num_job=$ARNOLD_WORKER_GPU
 num=`wc -l $wav_wav_text | awk -F' ' '{print $1}'`
+
+echo num=$num
+
 num_per_thread=`expr $num / $num_job + 1`
 sudo split -l $num_per_thread --additional-suffix=.lst -d $wav_wav_text $thread_dir/thread-
 out_dir=/tmp/thread_metas_$timestamp/results/
@@ -31,8 +34,8 @@ if [ ${num_job_minus_1} -ge 0 ];then
 fi
 wait
 
-rm $wav_wav_text
-rm -f $out_dir/merge.out
+# rm $wav_wav_text
+# rm -f $out_dir/merge.out
 
 cat $out_dir/thread-0*.wer.out >>  $out_dir/merge.out
-python3 eval/average_wer.py $out_dir/merge.out $score_file
+python3 average_wer.py $out_dir/merge.out $score_file

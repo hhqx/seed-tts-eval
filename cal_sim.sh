@@ -7,7 +7,7 @@ checkpoint_path=$3
 wav_wav_text=$output_dir/wav_res_ref_text
 score_file=$output_dir/wav_res_ref_text.wer
 
-python3 get_wav_res_ref_text.py $meta_lst $output_dir $output_dir/wav_res_ref_text
+python3 get_wav_res_ref_text.py $meta_lst $output_dir $output_dir/wav_res_ref_text || exit -1
 
 workdir=$(cd $(dirname $0); pwd)
 
