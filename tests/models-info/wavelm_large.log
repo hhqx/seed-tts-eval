@@ -1,0 +1,167 @@
+ECAPA_TDNN(
+  (feature_extract): UpstreamExpert(
+    (model): WavLM(
+      (feature_extractor): ConvFeatureExtractionModel(
+        (conv_layers): ModuleList(
+          (0): Sequential(
+            (0): Conv1d(1, 512, kernel_size=(10,), stride=(5,), bias=False)
+            (1): Dropout(p=0.0, inplace=False)
+            (2): Sequential(
+              (0): TransposeLast()
+              (1): Fp32LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+              (2): TransposeLast()
+            )
+            (3): GELU(approximate='none')
+          )
+          (1-4): 4 x Sequential(
+            (0): Conv1d(512, 512, kernel_size=(3,), stride=(2,), bias=False)
+            (1): Dropout(p=0.0, inplace=False)
+            (2): Sequential(
+              (0): TransposeLast()
+              (1): Fp32LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+              (2): TransposeLast()
+            )
+            (3): GELU(approximate='none')
+          )
+          (5-6): 2 x Sequential(
+            (0): Conv1d(512, 512, kernel_size=(2,), stride=(2,), bias=False)
+            (1): Dropout(p=0.0, inplace=False)
+            (2): Sequential(
+              (0): TransposeLast()
+              (1): Fp32LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+              (2): TransposeLast()
+            )
+            (3): GELU(approximate='none')
+          )
+        )
+      )
+      (post_extract_proj): Linear(in_features=512, out_features=1024, bias=True)
+      (dropout_input): Dropout(p=0.0, inplace=False)
+      (dropout_features): Dropout(p=0.0, inplace=False)
+      (encoder): TransformerEncoder(
+        (pos_conv): Sequential(
+          (0): Conv1d(1024, 1024, kernel_size=(128,), stride=(1,), padding=(64,), groups=16)
+          (1): SamePad()
+          (2): GELU(approximate='none')
+        )
+        (layers): ModuleList(
+          (0): TransformerSentenceEncoderLayer(
+            (self_attn): MultiheadAttention(
+              (dropout_module): Dropout(p=0.0, inplace=False)
+              (relative_attention_bias): Embedding(320, 16)
+              (k_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (v_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (q_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (out_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (grep_linear): Linear(in_features=64, out_features=8, bias=True)
+            )
+            (dropout1): Dropout(p=0.0, inplace=False)
+            (dropout2): Dropout(p=0.0, inplace=False)
+            (dropout3): Dropout(p=0.0, inplace=False)
+            (self_attn_layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+            (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+            (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+            (final_layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+          )
+          (1-23): 23 x TransformerSentenceEncoderLayer(
+            (self_attn): MultiheadAttention(
+              (dropout_module): Dropout(p=0.0, inplace=False)
+              (k_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (v_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (q_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (out_proj): Linear(in_features=1024, out_features=1024, bias=True)
+              (grep_linear): Linear(in_features=64, out_features=8, bias=True)
+            )
+            (dropout1): Dropout(p=0.0, inplace=False)
+            (dropout2): Dropout(p=0.0, inplace=False)
+            (dropout3): Dropout(p=0.0, inplace=False)
+            (self_attn_layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+            (fc1): Linear(in_features=1024, out_features=4096, bias=True)
+            (fc2): Linear(in_features=4096, out_features=1024, bias=True)
+            (final_layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+          )
+        )
+        (layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+      )
+      (layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+    )
+  )
+  (instance_norm): InstanceNorm1d(1024, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+  (layer1): Conv1dReluBn(
+    (conv): Conv1d(1024, 512, kernel_size=(5,), stride=(1,), padding=(2,))
+    (bn): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (layer2): SE_Res2Block(
+    (Conv1dReluBn1): Conv1dReluBn(
+      (conv): Conv1d(512, 512, kernel_size=(1,), stride=(1,))
+      (bn): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (Res2Conv1dReluBn): Res2Conv1dReluBn(
+      (convs): ModuleList(
+        (0-6): 7 x Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(2,), dilation=(2,))
+      )
+      (bns): ModuleList(
+        (0-6): 7 x BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv1dReluBn2): Conv1dReluBn(
+      (conv): Conv1d(512, 512, kernel_size=(1,), stride=(1,))
+      (bn): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (SE_Connect): SE_Connect(
+      (linear1): Linear(in_features=512, out_features=128, bias=True)
+      (linear2): Linear(in_features=128, out_features=512, bias=True)
+    )
+  )
+  (layer3): SE_Res2Block(
+    (Conv1dReluBn1): Conv1dReluBn(
+      (conv): Conv1d(512, 512, kernel_size=(1,), stride=(1,))
+      (bn): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (Res2Conv1dReluBn): Res2Conv1dReluBn(
+      (convs): ModuleList(
+        (0-6): 7 x Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(3,), dilation=(3,))
+      )
+      (bns): ModuleList(
+        (0-6): 7 x BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv1dReluBn2): Conv1dReluBn(
+      (conv): Conv1d(512, 512, kernel_size=(1,), stride=(1,))
+      (bn): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (SE_Connect): SE_Connect(
+      (linear1): Linear(in_features=512, out_features=128, bias=True)
+      (linear2): Linear(in_features=128, out_features=512, bias=True)
+    )
+  )
+  (layer4): SE_Res2Block(
+    (Conv1dReluBn1): Conv1dReluBn(
+      (conv): Conv1d(512, 512, kernel_size=(1,), stride=(1,))
+      (bn): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (Res2Conv1dReluBn): Res2Conv1dReluBn(
+      (convs): ModuleList(
+        (0-6): 7 x Conv1d(64, 64, kernel_size=(3,), stride=(1,), padding=(4,), dilation=(4,))
+      )
+      (bns): ModuleList(
+        (0-6): 7 x BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (Conv1dReluBn2): Conv1dReluBn(
+      (conv): Conv1d(512, 512, kernel_size=(1,), stride=(1,))
+      (bn): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (SE_Connect): SE_Connect(
+      (linear1): Linear(in_features=512, out_features=128, bias=True)
+      (linear2): Linear(in_features=128, out_features=512, bias=True)
+    )
+  )
+  (conv): Conv1d(1536, 1536, kernel_size=(1,), stride=(1,))
+  (pooling): AttentiveStatsPool(
+    (linear1): Conv1d(1536, 128, kernel_size=(1,), stride=(1,))
+    (linear2): Conv1d(128, 1536, kernel_size=(1,), stride=(1,))
+  )
+  (bn): BatchNorm1d(3072, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (linear): Linear(in_features=3072, out_features=256, bias=True)
+)

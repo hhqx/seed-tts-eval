@@ -25,9 +25,14 @@ for line in tqdm(lines):
         if utt.endswith(".wav"):
             utt = utt[:-4]
     
-    output_wav = os.path.join(wav_dir, utt)
+    # if not utt.endswith(".wav"):
+    #     utt += ".wav"
+    output_wav = os.path.join(wav_dir, utt + ".wav" if not utt.endswith(".wav") else utt)
+    # breakpoint()
     if not os.path.exists(output_wav):
-        raise FileNotFoundError(f"Output wav file does not exist: {output_wav}")
+        # raise FileNotFoundError(f"Output wav file does not exist: {output_wav}")
+        RuntimeWarning(f"Output wav file does not exist: {output_wav}, omitting this line.")
+        continue
 
     # tmp
     #prompt_wav = infer_wav

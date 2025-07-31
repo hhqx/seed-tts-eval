@@ -4,3 +4,8 @@ modelscope
 librosa
 torch
 torchaudio
+jiwer==3.0.5
+
+fire
+
+py3_tools_hqx

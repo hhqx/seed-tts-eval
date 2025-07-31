@@ -47,7 +47,11 @@ for t1, t2 in tqdm.tqdm(zip(tsv1, tsv2), total=len(tsv1)):
     try:
         sim, model = verification(args.model_name, t1_path, t2_path, use_gpu=True, checkpoint=args.checkpoint, wav1_start_sr=args.wav1_start_sr, wav2_start_sr=args.wav2_start_sr, wav1_end_sr=args.wav1_end_sr, wav2_end_sr=args.wav2_end_sr, model=model, wav2_cut_wav1=args.wav2_cut_wav1, device=args.device)
     except Exception as e:
-        print(str(e))
+        import traceback
+        traceback.print_exc()
+        print(f"Error processing {t1_path} and {t2_path}: {e}")
+        sim = None
+        
         continue
 
     if sim is None:

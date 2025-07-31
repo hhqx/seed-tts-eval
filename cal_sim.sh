@@ -9,6 +9,9 @@ score_file=$output_dir/wav_res_ref_text.wer
 
 python3 get_wav_res_ref_text.py $meta_lst $output_dir $output_dir/wav_res_ref_text || exit -1
 
+CUDA_VISIBLE_DEVICES=4,5,6,7
+N_GPU=1
+
 workdir=$(cd $(dirname $0); pwd)
 
 cd $workdir/thirdparty/UniSpeech/downstreams/speaker_verification/
@@ -16,12 +19,16 @@ cd $workdir/thirdparty/UniSpeech/downstreams/speaker_verification/
 timestamp=$(date +%s)
 thread_dir=/tmp/thread_metas_$timestamp/
 mkdir $thread_dir
-num_job=$ARNOLD_WORKER_GPU
+
+num_job=$N_GPU
+
 num=`wc -l $wav_wav_text | awk -F' ' '{print $1}'`
 num_per_thread=`expr $num / $num_job + 1`
 sudo split -l $num_per_thread --additional-suffix=.lst -d $wav_wav_text $thread_dir/thread-
 out_dir=/tmp/thread_metas_$timestamp/results/
 mkdir $out_dir
+
+# IPDB_DEBUG=1 CUDA_VISIBLE_DEVICES=0 python3 verification_pair_list_v2.py /tmp/thread_metas_1753870650//thread-00.lst --model_name wavlm_large --checkpoint /nfs/pretrained_models/wavlm_large_finetune.pth --scores /tmp/thread_metas_1753870650/results//thread-00.sim.out --wav1_start_sr 0 --wav2_start_sr 0 --wav1_end_sr -1 --wav2_end_sr -1 --device cuda:0
 
 num_job_minus_1=`expr $num_job - 1`
 if [ ${num_job_minus_1} -ge 0 ];then
@@ -39,8 +46,8 @@ if [ ${num_job_minus_1} -ge 0 ];then
 fi
 wait
 
-rm $wav_wav_text
-rm -f $out_dir/merge.out
+# rm $wav_wav_text
+# rm -f $out_dir/merge.out
 
 cat $out_dir/thread-0*.sim.out | grep -v "avg score" >>  $out_dir/merge.out
 python3 average.py $out_dir/merge.out $score_file

@@ -10,6 +10,7 @@ import soundfile as sf
 import scipy
 import zhconv
 from funasr import AutoModel
+from py3_tools.py_debug import breakpoint
 
 punctuation_all = punctuation + string.punctuation
 
@@ -50,6 +51,7 @@ def process_one(hypo, truth):
     else:
         raise NotImplementedError
 
+    
     measures = compute_measures(truth, hypo)
     ref_list = truth.split(" ")
     wer = measures["wer"]
@@ -64,6 +66,8 @@ def run_asr(wav_res_text_path, res_path):
         processor, model = load_en_model()
     elif lang == "zh":
         model = load_zh_model()
+    
+    breakpoint()
 
     params = []
     for line in open(wav_res_text_path).readlines():
@@ -78,6 +82,7 @@ def run_asr(wav_res_text_path, res_path):
             raise NotImplementedError
 
         if not os.path.exists(wav_res_path):
+            Warning(f"Output wav file does not exist: {wav_res_path}, omitting this line.")
             continue
         params.append((wav_res_path, text_ref))
     fout = open(res_path, "w")

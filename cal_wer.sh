@@ -12,10 +12,13 @@ workdir=$(cd $(dirname $0); cd ../; pwd)
 python3 get_wav_res_ref_text.py $meta_lst $output_dir $wav_wav_text || exit -1
 # python3 prepare_ckpt.py
 
+CUDA_VISIBLE_DEVICES=4,5,6,7
+N_GPU=8
+
 timestamp=$(date +%s)
 thread_dir=/tmp/thread_metas_$timestamp/
 mkdir $thread_dir
-num_job=$ARNOLD_WORKER_GPU
+num_job=$N_GPU
 num=`wc -l $wav_wav_text | awk -F' ' '{print $1}'`
 
 echo num=$num
@@ -24,6 +27,7 @@ num_per_thread=`expr $num / $num_job + 1`
 sudo split -l $num_per_thread --additional-suffix=.lst -d $wav_wav_text $thread_dir/thread-
 out_dir=/tmp/thread_metas_$timestamp/results/
 mkdir $out_dir
+
 
 num_job_minus_1=`expr $num_job - 1`
 if [ ${num_job_minus_1} -ge 0 ];then
