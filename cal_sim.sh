@@ -5,7 +5,7 @@ output_dir=$2
 checkpoint_path=$3
 
 wav_wav_text=$output_dir/wav_res_ref_text
-score_file=$output_dir/wav_res_ref_text.wer
+score_file=$output_dir/wav_res_ref_text.sim
 
 python3 get_wav_res_ref_text.py $meta_lst $output_dir $output_dir/wav_res_ref_text || exit -1
 
@@ -24,11 +24,11 @@ num_job=$N_GPU
 
 num=`wc -l $wav_wav_text | awk -F' ' '{print $1}'`
 num_per_thread=`expr $num / $num_job + 1`
-sudo split -l $num_per_thread --additional-suffix=.lst -d $wav_wav_text $thread_dir/thread-
+split -l $num_per_thread --additional-suffix=.lst -d $wav_wav_text $thread_dir/thread-
 out_dir=/tmp/thread_metas_$timestamp/results/
 mkdir $out_dir
 
-# IPDB_DEBUG=1 CUDA_VISIBLE_DEVICES=0 python3 verification_pair_list_v2.py /tmp/thread_metas_1753870650//thread-00.lst --model_name wavlm_large --checkpoint /nfs/pretrained_models/wavlm_large_finetune.pth --scores /tmp/thread_metas_1753870650/results//thread-00.sim.out --wav1_start_sr 0 --wav2_start_sr 0 --wav1_end_sr -1 --wav2_end_sr -1 --device cuda:0
+# IPDB_DEBUG=1 CUDA_VISIBLE_DEVICES=0 python3 verification_pair_list_v2.py /tmp/thread_metas_1753870650//thread-00.lst --model_name wavlm_large --checkpoint /mnt/pretrained_models/wavlm_large_finetune.pth --scores /tmp/thread_metas_1753870650/results//thread-00.sim.out --wav1_start_sr 0 --wav2_start_sr 0 --wav1_end_sr -1 --wav2_end_sr -1 --device cuda:0
 
 num_job_minus_1=`expr $num_job - 1`
 if [ ${num_job_minus_1} -ge 0 ];then

@@ -20,7 +20,7 @@ lang = sys.argv[3] # zh or en
 device = "cuda:0"
 
 def load_en_model():
-    model_id = "openai/whisper-large-v3"
+    model_id = "/mnt/pretrained_models/whisper-large-v3"
     processor = WhisperProcessor.from_pretrained(model_id)
     model = WhisperForConditionalGeneration.from_pretrained(model_id).to(device)
     return processor, model

@@ -2,9 +2,9 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # # Spark-TTS, llm-tts repo, 空白样本个数：6
 # OUTPUT_WAV_DIR="/home/hqx/llm-tts/outputs/seedtts-eval/spark-tts/sim/LLM_3036959a/wav"
-# bash cal_sim.sh /nfs/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
+# bash cal_sim.sh /mnt/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
 #   $OUTPUT_WAV_DIR \
-#   /nfs/pretrained_models/wavlm_large_finetune.pth
+#   /mnt/pretrained_models/wavlm_large_finetune.pth
 
 # ASV: 0.57
 # ASV-var: 0.01
@@ -12,9 +12,9 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # Spark-TTS, original repo, 空白样本个数：13
 OUTPUT_WAV_DIR="/home/hqx/Spark-TTS/outputs/seedtts/sim/wav"
-bash cal_sim.sh /nfs/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
+bash cal_sim.sh /mnt/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
   $OUTPUT_WAV_DIR \
-  /nfs/pretrained_models/wavlm_large_finetune.pth
+  /mnt/pretrained_models/wavlm_large_finetune.pth
 
 # ASV: 0.569
 # ASV-var: 0.011
@@ -23,9 +23,9 @@ bash cal_sim.sh /nfs/datasets_processed/seedtts_testset/data/en_non_para_reconst
 # ---------------------------------------------------------------------------------------------------------------------
 # # Pretrain Ours， one-shot, 空白样本个数：69
 # OUTPUT_WAV_DIR="/home/hqx/llm-tts/outputs/seedtts-eval/tts-pretrain/sim/exp0719_4090x6_constan_lr5e5_perbs256_ds2_6epoch_662bbde7/wav"
-# bash cal_sim.sh /nfs/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
+# bash cal_sim.sh /mnt/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
 #   $OUTPUT_WAV_DIR \
-#   /nfs/pretrained_models/wavlm_large_finetune.pth
+#   /mnt/pretrained_models/wavlm_large_finetune.pth
 
 # ASV: 0.527
 # ASV-var: 0.011
@@ -33,9 +33,9 @@ bash cal_sim.sh /nfs/datasets_processed/seedtts_testset/data/en_non_para_reconst
 # ---------------------------------------------------------------------------------------------------------------------
 # # Pretrain Ours， zero-shot, 空白样本个数：0
 # OUTPUT_WAV_DIR="/home/hqx/llm-tts/outputs/seedtts-eval/tts-pretrain/sim/exp0719_4090x6_constan_lr5e5_perbs256_ds2_6epoch_7d9fc897/wav"
-# bash cal_sim.sh /nfs/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
+# bash cal_sim.sh /mnt/datasets_processed/seedtts_testset/data/en_non_para_reconstruct_meta.lst  \
 #   $OUTPUT_WAV_DIR \
-#   /nfs/pretrained_models/wavlm_large_finetune.pth
+#   /mnt/pretrained_models/wavlm_large_finetune.pth
 
 # ASV: 0.037
 # ASV-var: 0.01
